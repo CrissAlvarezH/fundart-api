@@ -103,8 +103,8 @@ admin.site.register(City, CityAdmin)
 
 
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ("address", "id", "department", "city", "indications", "user")
-    autocomplete_fields = ("department", "city", "user")
+    list_display = ("address", "id", "city", "indications", "user")
+    autocomplete_fields = ("city", "user")
     search_fields = ("user__id", "user__email", "user__full_name")
     search_help_text = "Search by user id, name or email"
 

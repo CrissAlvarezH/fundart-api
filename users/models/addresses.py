@@ -13,11 +13,10 @@ class City(models.Model):
     department = models.ForeignKey("users.Department", on_delete=models.DO_NOTHING)
 
     def __str__(self):
-        return f"{self.id}: {self.name}"
+        return f"({self.department.name}) {self.id}: {self.name}"
 
 
 class Address(models.Model):
-    department = models.ForeignKey("users.Department", on_delete=models.DO_NOTHING)
     city = models.ForeignKey("users.City", on_delete=models.DO_NOTHING)
     address = models.CharField(max_length=1000)
     indications = models.CharField(max_length=2000)
@@ -26,4 +25,4 @@ class Address(models.Model):
     user = models.ForeignKey("users.User", on_delete=models.DO_NOTHING)
 
     def __str__(self):
-        return f"{self.address} - {self.department.name} / {self.city.name} ({self.user})"
+        return f"{self.address} - {self.city} ({self.user})"

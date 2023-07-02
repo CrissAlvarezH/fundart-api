@@ -12,6 +12,7 @@ def create_verification_account_code(user: User) -> ConfirmationCode:
 
 def send_email_verification_code(to: User, code: ConfirmationCode):
     print(f"-- send email to: {to} code {code}")
+    # TODO
 
 
 def change_user_password(user: User, new_password: str):
