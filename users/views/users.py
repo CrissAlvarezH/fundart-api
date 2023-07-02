@@ -23,6 +23,22 @@ class UserViewSet(viewsets.ViewSet):
         user = serializer.save()
         return Response(status=status.HTTP_201_CREATED, data=UserSerializer(user).data)
 
+    @action(detail=False, methods=["PUT"], url_path="change-password")
+    def change_password(self, request):
+        current_pass = request.data.get("current_password")
+        new_pass = request.data.get("new_password")
+
+        if not request.user.check_password(current_pass):
+            raise ValidationError("incorrect password")
+
+        if len(new_pass) < 6:
+            raise ValidationError("password length must be bigger than 6")
+
+        request.user.set_password(new_pass)
+        request.user.save()
+
+        return Response({"details": "password changed"})
+
 
 class UserPasswordViewSet(viewsets.ViewSet):
 
