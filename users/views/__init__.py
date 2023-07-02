@@ -1,1 +1,1 @@
-from .users import UserPasswordViewSet
+from .users import UserPasswordViewSet, UserViewSet

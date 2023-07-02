@@ -11,6 +11,10 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ("username", "full_name")
 
+    @property
+    def group_names(self):
+        return [g.name for g in self.groups.all()]
+
     def __str__(self):
         return f"{self.id}: {self.email}"
 

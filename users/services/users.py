@@ -17,3 +17,10 @@ def send_email_verification_code(to: User, code: ConfirmationCode):
 def change_user_password(user: User, new_password: str):
     user.set_password(new_password)
     user.save()
+
+
+def user_create(full_name: str, email: str, phone: str, password: str) -> User:
+    user = User.objects.create(full_name=full_name, email=email, phone=phone)
+    user.set_password(password)
+    user.save()
+    return user

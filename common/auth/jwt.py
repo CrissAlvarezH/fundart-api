@@ -9,7 +9,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["user"] = {
             "id": user.id,
             "full_name": user.full_name,
-            "groups": [g.name for g in user.groups.all()]
+            "group_names": user.group_names
         }
 
         return token

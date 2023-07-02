@@ -4,10 +4,11 @@ from rest_framework.routers import DefaultRouter
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from users.views import UserPasswordViewSet
+from users.views import UserPasswordViewSet, UserViewSet
 
 
 router = DefaultRouter()
+router.register("", UserViewSet, basename="users")
 router.register("password", UserPasswordViewSet, basename="password")
 
 urlpatterns = [
