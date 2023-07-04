@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import pathlib
 from pathlib import Path
 from datetime import timedelta
 import environ
@@ -45,10 +45,12 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework_simplejwt",
+    "admin_auto_filters",
 ]
 
 LOCAL_APPS = [
     "users",
+    "phone_cases",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -140,6 +142,9 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+MEDIA_ROOT = pathlib.Path.joinpath(BASE_DIR, "public")
+MEDIA_URL = "media/"
 
 
 # Static files (CSS, JavaScript, Images)
