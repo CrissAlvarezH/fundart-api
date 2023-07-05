@@ -28,6 +28,7 @@ class PhoneCaseAdmin(admin.ModelAdmin):
         "discount", "is_active",
     )
     list_filter = (BrandRefFilter, CaseTypeFilter, DiscountFilter, "inventory_status", "is_active")
+    autocomplete_fields = ("phone_brand_ref", "case_type", "discount")
     readonly_fields = ("scaffold_preview",)
     search_fields = ("phone_brand_ref__name",)
     search_help_text = "Filter by brand ref name"
