@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from phone_cases.models import PhoneCase, PhoneBrand, PhoneBrandReference, CaseType, Discount
+from phone_cases.models import PhoneCase, Discount
 
 
 class DiscountSerializer(serializers.ModelSerializer):

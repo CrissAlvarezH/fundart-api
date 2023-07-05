@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from phone_cases.models import PhoneCase, PhoneBrand
+from phone_cases.models import PhoneCase
 from phone_cases.serializers import PhoneCaseSerializer
 from phone_cases.services import get_phone_case_by_type_and_ref
 
