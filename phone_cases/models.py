@@ -1,11 +1,13 @@
 import os.path
 
+from django.utils import timezone
 from django.db import models
 from django.utils.html import mark_safe
 
 
 def phone_case_scaffold_img_path(instance, filename) -> str:
-    return f"phone_cases/{instance.id}/scaffold"
+    _, ext = os.path.splitext(filename)
+    return f"phone_cases/scaffold{ext}"
 
 
 class PhoneCase(models.Model):
@@ -22,8 +24,11 @@ class PhoneCase(models.Model):
     case_type = models.ForeignKey("phone_cases.CaseType", on_delete=models.DO_NOTHING)
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        unique_together = ("phone_brand_ref", "case_type")
+
     def sale_price(self):
-        if self.discount:
+        if self.discount and timezone.now() < self.discount.valid_until:
             return self.price - (self.price * self.discount.rate / 1000)
         return self.price
 
@@ -53,7 +58,11 @@ class PhoneBrand(models.Model):
 
 class PhoneBrandReference(models.Model):
     name = models.CharField(max_length=200)
-    brand = models.ForeignKey("phone_cases.PhoneBrand", on_delete=models.DO_NOTHING)
+    brand = models.ForeignKey(
+        "phone_cases.PhoneBrand", on_delete=models.DO_NOTHING)
+
+    class Meta:
+        unique_together = ("name", "brand")
 
     def __str__(self):
         return f"({self.brand.name}) {self.name}"
@@ -65,7 +74,7 @@ def case_type_icon_img_path(instance, filename) -> str:
 
 
 class CaseType(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, primary_key=True)
     icon = models.ImageField(upload_to=case_type_icon_img_path)
 
     def icon_preview(self):
@@ -77,12 +86,12 @@ class CaseType(models.Model):
         return mark_safe(path)
 
     def __str__(self):
-        return f"{self.id}: {self.name}"
+        return self.name
 
 
 def case_type_img_path(instance, filename) -> str:
     _, ext = os.path.splitext(filename)
-    return f"case_types/{instance.case_type.id}/imgs/{instance.order_priority}{ext}"
+    return f"case_types/imgs/{instance.order_priority}{ext}"
 
 
 class CaseTypeImage(models.Model):

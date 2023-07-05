@@ -64,9 +64,9 @@ admin.site.register(PhoneBrandReference, PhoneBrandReferenceAdmin)
 
 
 class CaseTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "id", "icon_preview_mini")
-    search_fields = ("name", "id")
-    search_help_text = "Search by name and id"
+    list_display = ("name", "icon_preview_mini")
+    search_fields = ("name",)
+    search_help_text = "Search by name"
     readonly_fields = ("icon_preview",)
 
 
