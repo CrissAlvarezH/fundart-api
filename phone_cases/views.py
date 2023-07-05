@@ -11,7 +11,7 @@ class PhoneCaseViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PhoneCase.objects.all()
     serializer_class = PhoneCaseSerializer
 
-    @action(detail=False, methods=["GET"], url_path=r"type/(?P<type_id>\d+)/ref/(?P<ref_id>\d+)")
+    @action(detail=False, methods=["GET"], url_path=r"type/(?P<type_id>\w+)/ref/(?P<ref_id>\d+)")
     def retrieve_by_type_and_ref(self, request, type_id, ref_id):
         case = get_phone_case_by_type_and_ref(type_id, ref_id)
 
