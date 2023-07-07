@@ -23,6 +23,7 @@ class Address(models.Model):
     receiver_name = models.CharField(max_length=500)
     receiver_phone = models.CharField(max_length=50)
     user = models.ForeignKey("users.User", on_delete=models.DO_NOTHING)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.address} - {self.city} ({self.user})"
+        return f"{self.address} - {self.city}"

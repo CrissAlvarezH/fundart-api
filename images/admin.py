@@ -11,7 +11,7 @@ class ImageTagFilter(AutocompleteFilter):
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ("preview_mini", "prompt_short", "description_short", "tag_list")
+    list_display = ("preview_mini", "id", "prompt_short", "description_short", "tag_list")
     readonly_fields = ("preview",)
     list_filter = (ImageTagFilter,)
     search_fields = ("prompt", "description")

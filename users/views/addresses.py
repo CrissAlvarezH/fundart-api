@@ -11,10 +11,12 @@ class AddressViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated & IsSameUser]
 
     def get_queryset(self):
-        return Address.objects.filter(user_id=self.kwargs.get("user_id"))
+        return Address.objects.filter(user_id=self.kwargs.get("user_id"), is_active=True)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context["user_id"] = self.kwargs.get("user_id")
         return context
 
+    def perform_destroy(self, instance):
+        instance.is_active = False

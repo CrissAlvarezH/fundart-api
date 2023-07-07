@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
+from admin_auto_filters.filters import AutocompleteFilter
+
 from users.models import User, City, Department, Address, ConfirmationCode
 
 
@@ -91,12 +93,17 @@ class DepartmentAdmin(admin.ModelAdmin):
 admin.site.register(Department, DepartmentAdmin)
 
 
+class DepartmentFilter(AutocompleteFilter):
+    title = "Deparment"
+    field_name = "department"
+
+
 class CityAdmin(admin.ModelAdmin):
     list_display = ("name", "id", "department")
     autocomplete_fields = ("department",)
-    list_filter = ("department",)
-    search_fields = ("name",)
-    search_help_text = "Search by name"
+    list_filter = (DepartmentFilter,)
+    search_fields = ("name", "id")
+    search_help_text = "Search by name and id"
 
 
 admin.site.register(City, CityAdmin)

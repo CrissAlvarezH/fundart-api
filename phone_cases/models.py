@@ -27,6 +27,7 @@ class PhoneCase(models.Model):
     class Meta:
         unique_together = ("phone_brand_ref", "case_type")
 
+    @property
     def sale_price(self):
         if self.discount and timezone.now() < self.discount.valid_until:
             return self.price - (self.price * self.discount.rate / 1000)
