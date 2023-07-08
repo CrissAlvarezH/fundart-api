@@ -11,7 +11,10 @@ class UserFilter(AutocompleteFilter):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("user", "id", "total", "created_at", "current_status", "address", "coupons_resume")
+    list_display = (
+        "user", "id", "total", "created_at", "current_status", "address",
+        "coupons_resume",
+    )
     list_filter = (UserFilter,)
     search_fields = ("id", "user__email")
     search_help_text = "Search by id and user email"

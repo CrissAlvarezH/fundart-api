@@ -198,7 +198,7 @@ class Command(BaseCommand):
 
             coupon = Coupon.objects.create(
                 value=name,
-                discount_rate=random.choice([15, 20, 25, 12, 10]),
+                discount_rate=random.choice([0, 15, 20, 25, 12, 10]),
                 is_free_shipping=random.choice([True, False]),
                 max_uses=random.randint(1, 4),
                 valid_until=(timezone.now() + timedelta(days=30)),

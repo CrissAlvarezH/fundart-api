@@ -9,6 +9,7 @@ class Order(models.Model):
     user = models.ForeignKey("users.User", on_delete=models.DO_NOTHING)
     address = models.ForeignKey("users.Address", on_delete=models.DO_NOTHING)
     coupons = models.ManyToManyField("orders.Coupon", blank=True)
+    shipping_cost = models.FloatField(default=0)
 
     def coupons_resume(self):
         resume = [str(c) for c in self.coupons.all()]
@@ -16,10 +17,21 @@ class Order(models.Model):
             return resume
         return "None"
 
+    @property
     def total(self):
         total = 0
         for p in self.orderphonecase_set.all():
-            total += p.price * p.quantity
+            total += p.total_price
+
+        discount_shipping = False
+        for c in self.coupons.all():
+            total -= (total * c.discount_rate) / 100
+            if c.is_free_shipping:
+                discount_shipping = True
+
+        if not discount_shipping:
+            total += self.shipping_cost
+
         return total
 
     def current_status(self):
@@ -67,6 +79,13 @@ class OrderPhoneCase(models.Model):
     discount = models.ForeignKey("phone_cases.Discount", on_delete=models.DO_NOTHING, null=True, blank=True)
     quantity = models.IntegerField()
     price = models.FloatField()
+
+    @property
+    def total_price(self):
+        if self.discount:
+            return self.quantity * (self.price - (self.price * self.discount.rate / 100))
+        else:
+            return self.quantity * self.price
 
 
 class Coupon(models.Model):

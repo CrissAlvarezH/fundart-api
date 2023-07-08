@@ -17,5 +17,5 @@ class PhoneCaseSerializer(serializers.ModelSerializer):
         fields = (
             "id", "price", "sale_price", "discount",
             "inventory_status", "phone_brand_ref", "case_type",
-            "case_scaffold_img_path", "is_active",
+            "case_scaffold_img", "is_active",
         )

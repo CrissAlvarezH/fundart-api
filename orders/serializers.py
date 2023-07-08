@@ -36,31 +36,25 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ("id", "current_status", "user", "address", "cases", "coupons", "created_at")
+        fields = (
+            "id", "current_status", "total", "user", "address", "cases",
+            "coupons", "created_at",
+        )
 
 
 class OrderPhoneCaseCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderPhoneCase
-        fields = ("phone_case", "quantity", "image", "discount", "price")
-
-    def validate(self, data):
-        case = data["phone_case"]
-        if data.get("discount") and case.discount.id != data["discount"].id:
-            raise ValidationError(
-                f"Discount '{data['discount']}' don't belong to phone case {case.id}")
-
-        if case.sale_price != data["price"]:
-            raise ValidationError(
-                f"Price ${data['price']} is incorrect, must be ${case.sale_price} for case {case.id}")
-
-        return data
+        fields = ("phone_case", "quantity", "image")
 
 
 class OrderCreateSerializer(serializers.Serializer):
     address = serializers.IntegerField()
     coupons = serializers.ListSerializer(child=serializers.CharField())
     phone_cases = OrderPhoneCaseCreateSerializer(many=True)
+
+    def to_representation(self, instance):
+        return OrderSerializer(instance).data
 
     def validate_address(self, address):
         if not Address.objects.filter(id=address).exists():
@@ -79,12 +73,13 @@ class OrderCreateSerializer(serializers.Serializer):
     def validate_phone_cases(self, phone_cases):
         if len(phone_cases) == 0:
             raise ValidationError("must have phone cases")
+        return phone_cases
 
     def validate(self, data):
         # validate if this coupon is for the case in the order
         case_ids = [str(pc["phone_case"]) for pc in data["phone_cases"]]
         for c in data.get("coupons", []):
-            coupon = Coupon.objects.filter(id=c).first()
+            coupon = Coupon.objects.filter(value=c).first()
             if coupon.for_all_phone_cases:
                 continue
 
@@ -93,11 +88,11 @@ class OrderCreateSerializer(serializers.Serializer):
             # if all the cases in order are allowed to use with this coupon
             if set(case_ids).intersection(set(coupon_case_ids)) != set(case_ids):
                 raise ValidationError(f"coupon '{c}' is not allowed to theses cases")
-        # TODO test this function
+        return data
 
     def create(self, validated_data):
         for c in validated_data.get("coupons"):
-            was_used = Coupon.objects.get(id=c).use()
+            was_used = Coupon.objects.get(value=c).use()
             if not was_used:
                 raise ValidationError(f"coupon '{c}' was already used")
 
@@ -110,5 +105,8 @@ class OrderCreateSerializer(serializers.Serializer):
         for pc in validated_data.get("phone_cases"):
             OrderPhoneCase.objects.create(
                 order=order,
+                discount=pc["phone_case"].discount,
+                price=pc["phone_case"].price,
                 **pc,
             )
+        return order
