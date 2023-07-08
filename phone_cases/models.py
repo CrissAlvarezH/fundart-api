@@ -17,7 +17,7 @@ class PhoneCase(models.Model):
         OUT_OF_STOCK = ("OUT_OF_STOCK", "Out of stock")
 
     price = models.FloatField()
-    case_scaffold_img_path = models.ImageField(upload_to=phone_case_scaffold_img_path)
+    case_scaffold_img = models.ImageField(upload_to=phone_case_scaffold_img_path)
     inventory_status = models.CharField(max_length=200, choices=InventoryStatus.choices)
     discount = models.ForeignKey("phone_cases.Discount", null=True, blank=True, on_delete=models.DO_NOTHING)
     phone_brand_ref = models.ForeignKey("phone_cases.PhoneBrandReference", on_delete=models.DO_NOTHING)
@@ -34,7 +34,7 @@ class PhoneCase(models.Model):
         return self.price
 
     def scaffold_preview(self):
-        path = f'<img src="{self.case_scaffold_img_path.url}" width="200" />'
+        path = f'<img src="{self.case_scaffold_img.url}" width="200" />'
         return mark_safe(path)
 
     def __str__(self):

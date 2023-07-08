@@ -37,7 +37,11 @@ admin.site.register(OrderPhoneCase, OrderPhoneCaseAdmin)
 
 
 class CouponAdmin(admin.ModelAdmin):
-    list_display = ("value", "discount_rate", "is_free_shipping", "max_uses", "valid_until", "created_at")
+    list_display = (
+        "value", "discount_rate", "is_free_shipping", "uses", "max_uses",
+        "for_all_phone_cases", "is_valid", "valid_until", "created_at",
+    )
+    readonly_fields = ("is_valid",)
 
 
 admin.site.register(Coupon, CouponAdmin)

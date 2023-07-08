@@ -1,6 +1,7 @@
 from django.db import models, transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 
 class Order(models.Model):
@@ -69,6 +70,11 @@ class OrderPhoneCase(models.Model):
 
 
 class Coupon(models.Model):
+    class ValidStatus:
+        INVALID_USED = "NO: used"
+        INVALID_EXPIRED = "NO: expired"
+        VALID = "YES"
+
     value = models.CharField(max_length=50, primary_key=True)
     discount_rate = models.IntegerField(default=0)
     is_free_shipping = models.BooleanField(default=False)
@@ -80,6 +86,13 @@ class Coupon(models.Model):
 
     for_all_phone_cases = models.BooleanField(default=False)
     phone_cases = models.ManyToManyField("phone_cases.PhoneCase", blank=True)
+
+    def is_valid(self):
+        if self.uses >= self.max_uses:
+            return self.ValidStatus.INVALID_USED
+        if timezone.now() > self.valid_until:
+            return self.ValidStatus.INVALID_EXPIRED
+        return self.ValidStatus.VALID
 
     @transaction.atomic()
     def use(self) -> bool:

@@ -1,13 +1,18 @@
+from urllib.request import urlopen
+
 from django.db import models
 from django.utils.html import mark_safe
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 
 
 class Image(models.Model):
-    image = models.ImageField(upload_to="images/img")
-    thumbnail = models.ImageField(upload_to="images/thumbnail")
+    image = models.ImageField(upload_to="images/imgs/")
+    thumbnail = models.ImageField(upload_to="images/thumbnails/")
     prompt = models.CharField(max_length=5000)
     description = models.CharField(max_length=100)
     tags = models.ManyToManyField("images.ImageTag")
+    created_by = models.ForeignKey("users.User", on_delete=models.DO_NOTHING)
 
     def preview(self):
         path = f"""

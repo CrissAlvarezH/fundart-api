@@ -93,6 +93,7 @@ class OrderCreateSerializer(serializers.Serializer):
             # if all the cases in order are allowed to use with this coupon
             if set(case_ids).intersection(set(coupon_case_ids)) != set(case_ids):
                 raise ValidationError(f"coupon '{c}' is not allowed to theses cases")
+        # TODO test this function
 
     def create(self, validated_data):
         for c in validated_data.get("coupons"):
