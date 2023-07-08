@@ -53,9 +53,14 @@ class PhoneBrandAdmin(admin.ModelAdmin):
 admin.site.register(PhoneBrand, PhoneBrandAdmin)
 
 
+class BrandFilter(AutocompleteFilter):
+    title = "Brand"
+    field_name = "brand"
+
+
 class PhoneBrandReferenceAdmin(admin.ModelAdmin):
     list_display = ("name", "id", "brand")
-    list_filter = ("brand",)
+    list_filter = (BrandFilter,)
     search_fields = ("name", "brand__name")
     search_help_text = "Search by name and brand name"
     autocomplete_fields = ("brand",)
