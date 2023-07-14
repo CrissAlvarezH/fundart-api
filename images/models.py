@@ -14,6 +14,9 @@ class Image(models.Model):
     tags = models.ManyToManyField("images.ImageTag")
     created_by = models.ForeignKey("users.User", on_delete=models.DO_NOTHING)
 
+    class Meta:
+        ordering = ("id",)
+
     def preview(self):
         path = f"""
             <div style="display: flex">

@@ -11,6 +11,9 @@ class Order(models.Model):
     coupons = models.ManyToManyField("orders.Coupon", blank=True)
     shipping_cost = models.FloatField(default=0)
 
+    class Meta:
+        ordering = ("id",)
+
     def coupons_resume(self):
         resume = [str(c) for c in self.coupons.all()]
         if len(resume) > 0:
